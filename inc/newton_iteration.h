@@ -13,7 +13,7 @@ Eigen::VectorXd NewtonIteration(
 {
     Eigen::VectorXd x(x0); 
     int iter = 0; 
-    for (; iter < max_iter; ++iter) {
+    while (iter < max_iter) {
         Eigen::VectorXd f_val = func(x, dx);
         Eigen::MatrixXd J = jacobian(x, dx);
 
@@ -21,6 +21,7 @@ Eigen::VectorXd NewtonIteration(
         Eigen::VectorXd delta = J.fullPivLu().solve(-f_val);
 
         x += delta;
+        iter++; 
 
         if (delta.norm() < xtol) {
             break; // Converged
