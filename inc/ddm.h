@@ -43,7 +43,7 @@ namespace DDM {
     T dsrh_dn(T n, T p, T nie, T tn, T tp)
     {
         T C = (tp * (n + nie) + tn * (p + nie)); 
-        T g = n / C - tn * (n * p - nie * nie) / C / C; 
+        T g = p / C - tn * (n * p - nie * nie) / C / C; 
         return g; 
     }
 
