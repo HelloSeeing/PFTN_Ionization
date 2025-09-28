@@ -20,14 +20,16 @@ Eigen::VectorXd NewtonIteration(
         // Solve J * delta = -f_val
         Eigen::VectorXd delta = J.fullPivLu().solve(-f_val);
 
+        if (verbose) {
+            std::cout << "Iteration " << iter << ": x = " << x.transpose() << std::endl;
+            std::cout << "Iteration " << iter << ": f(x) = " << f_val.transpose() << std::endl;
+            std::cout << "Iteration " << iter << ": dx = " << delta.transpose() << std::endl;
+        }
+
         x += delta;
         iter++; 
 
-        if (delta.norm() < xtol) {
-            break; // Converged
-        }
-
-        if (f_val.norm() < ftol) {
+        if (delta.norm() < xtol and f_val.norm() < ftol) {
             break; // Converged
         }
     }

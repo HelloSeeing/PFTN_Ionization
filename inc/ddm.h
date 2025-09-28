@@ -1,6 +1,7 @@
 #include <cmath>
 #include <Eigen/Dense>
 #include <params.h>
+#include <iostream>
 
 #ifndef EPS
  #define EPS 1e-10
@@ -71,7 +72,14 @@ namespace DDM {
     {
         T Bp = B((psi0 - psi1) / Vt);
         T Bm = B((psi1 - psi0) / Vt);
-        return q * mu_p * Vt / dx * (p1 * Bp - p0 * Bm);
+        return q * mu_p * Vt / dx * (p0 * Bm - p1 * Bp);
+    }
+
+    // calculate the quasi-Fermi level of electrons
+    template <typename T>
+    T fun_Efn(T n, T nie, T psi, T Vt)
+    {
+        return psi - Vt * std::log(n / nie);
     }
 
     // continuity equation for electrons at node i
@@ -125,10 +133,10 @@ namespace DDM {
 
         public: 
             // default constructor
-            JnContEq() : n0(0.0), n2(0.0), N(0), JnEqs(NULL), params(NULL) {}
+            JnContEq() : N(0), n0(0.0), n2(0.0), params(NULL), JnEqs(NULL) {}
 
             JnContEq(double dx_, double n0_, double n2_, double* psi_, double* p_, double* An_, double* Ap_, int N_, Params<double>* params_)
-             : n0(n0_), n2(n2_), params(params_), N(N_)
+             : N(N_), n0(n0_), n2(n2_), params(params_)
             {
                 psi = Eigen::VectorXd::Map(psi_, N);
                 p = Eigen::VectorXd::Map(p_, N);
@@ -139,7 +147,7 @@ namespace DDM {
             }
 
             JnContEq(double dx_, double n0_, double n2_, Eigen::VectorXd psi_, Eigen::VectorXd p_, Eigen::VectorXd An_, Eigen::VectorXd Ap_, int N_, Params<double>* params_)
-             : n0(n0_), n2(n2_), psi(psi_), p(p_), params(params_), N(N_)
+             : N(N_), n0(n0_), n2(n2_), psi(psi_), p(p_), params(params_)
             {
                 JnEqs = (JnContEq_at_i*) malloc((N_ - 2) * sizeof(JnContEq_at_i));
                 for (int i = 1; i < N_ - 1; i++) {

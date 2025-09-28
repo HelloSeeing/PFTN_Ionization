@@ -24,8 +24,10 @@ double DDM::JnContEq_at_i::operator()(Eigen::VectorXd x, double dx)
     double ef0 = (psi0 - psi1) / dx; // electric field at left edge
     double ef1 = (psi1 - psi2) / dx; // electric field at right edge
 
-    double a0, a1 = An[i - 1], An[i]; 
-    double b0, b1 = Ap[i - 1], Ap[i];
+    double a0 = An[i - 1]; 
+    double a1 = An[i];
+    double b0 = Ap[i - 1];
+    double b1 = Ap[i];
 
     double R = DDM::srh(n1, p1, params->nie, params->tn, params->tp); 
 
@@ -98,8 +100,10 @@ void DDM::JnContEq_at_i::gradient_n(Eigen::VectorXd x, double dx, Eigen::VectorX
     double ef0 = (psi0 - psi1) / dx; // electric field at left edge
     double ef1 = (psi1 - psi2) / dx; // electric field at right edge
 
-    double a0, a1 = An[i - 1], An[i]; 
-    double b0, b1 = Ap[i - 1], Ap[i];
+    double a0 = An[i - 1]; 
+    double a1 = An[i];
+    // double b0 = Ap[i - 1];
+    // double b1 = Ap[i];
 
     Eigen::VectorXd d_G_left = Eigen::VectorXd::Zero(N - 2);
     if (ef0 * (Jn0 + Jp0) > 0)
@@ -161,8 +165,8 @@ Eigen::VectorXd DDM::JnContEq::Jn(Eigen::VectorXd x, double dx)
         double n0 = (i == 0) ? this->n0 : x[i - 1];
         double n1 = (i == N - 2) ? this->n2 : x[i + 0];
 
-        double p0 = p[i];
-        double p1 = p[i + 1];
+        // double p0 = p[i];
+        // double p1 = p[i + 1];
 
         double psi0 = psi[i];
         double psi1 = psi[i + 1];
